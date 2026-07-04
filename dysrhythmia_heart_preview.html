@@ -1,0 +1,1218 @@
+<style>
+  .rhythm-widget {
+    --violet: #a855f7;
+    --violet-strong: #7c3aed;
+    --violet-deep: #4c1d95;
+    --violet-glow: #d8b4fe;
+    --violet-wash: rgba(168, 85, 247, 0.08);
+    --violet-wash-hover: rgba(168, 85, 247, 0.16);
+    --violet-border: rgba(168, 85, 247, 0.28);
+    padding: 20px;
+    border-radius: 16px;
+    background:
+      radial-gradient(
+        circle at 15% 0%,
+        rgba(168, 85, 247, 0.1),
+        transparent 55%
+      ),
+      var(--violet-wash);
+    border: 1px solid var(--violet-border);
+    box-shadow:
+      0 1px 2px rgba(76, 29, 149, 0.06),
+      0 12px 30px -18px rgba(124, 58, 237, 0.45);
+  }
+  .rhythm-widget * {
+    box-sizing: border-box;
+  }
+  .rhythm-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 1.4rem;
+  }
+  .rhythm-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .group-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--violet-strong);
+    width: 92px;
+    flex-shrink: 0;
+  }
+  .group-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .rhythm-btn {
+    position: relative;
+    font-size: 12.5px;
+    padding: 6px 14px 6px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--violet-border);
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      transform 0.1s ease;
+    white-space: nowrap;
+  }
+  .rhythm-btn:hover {
+    background: var(--violet-wash-hover);
+    border-color: var(--violet);
+  }
+  .rhythm-btn:active {
+    transform: scale(0.96);
+  }
+  .rhythm-btn.active {
+    border-color: transparent;
+    color: #fff;
+    background: linear-gradient(135deg, var(--violet), var(--violet-strong));
+    box-shadow: 0 3px 10px -2px rgba(124, 58, 237, 0.6);
+    font-weight: 600;
+  }
+  .rhythm-btn::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+  }
+  .rhythm-btn.active::before {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+  }
+  .rhythm-btn.severity-success::before {
+    background: #22c55e;
+  }
+  .rhythm-btn.severity-warning::before {
+    background: #f59e0b;
+  }
+  .rhythm-btn.severity-danger::before {
+    background: #ef4444;
+  }
+
+  .info-card {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid var(--violet-border);
+    margin-bottom: 14px;
+  }
+  .heart-frame {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--glow, var(--violet)) 14%, transparent);
+    box-shadow:
+      0 0 0 6px color-mix(in srgb, var(--glow, var(--violet)) 8%, transparent),
+      0 0 24px -6px
+        color-mix(in srgb, var(--glow, var(--violet)) 55%, transparent);
+    transition:
+      background 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .info-main {
+    flex: 1;
+    min-width: 0;
+  }
+  #rate-label {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.15;
+  }
+  #rhythm-name {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 1px 0 8px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 999px;
+  }
+  .stat-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 11px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    padding: 5px 11px;
+    border-radius: 10px;
+    background: var(--violet-wash);
+    border: 1px solid var(--violet-border);
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  .stat-chip b {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--violet-strong);
+  }
+
+  .monitor-card {
+    position: relative;
+    background: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #0c0518 70%);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: 14px;
+    padding: 10px 12px 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.12);
+  }
+  .monitor-topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "SF Mono", "Consolas", monospace;
+    color: #e9d5ff;
+    margin-bottom: 2px;
+  }
+  .monitor-lead {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+  .monitor-hr {
+    font-size: 22px;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(216, 180, 254, 0.8);
+  }
+  #ecg-canvas {
+    width: 100%;
+    height: 130px;
+    display: block;
+    background:
+      repeating-linear-gradient(
+        to right,
+        rgba(196, 145, 253, 0.09) 0 1px,
+        transparent 1px 20px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgba(196, 145, 253, 0.09) 0 1px,
+        transparent 1px 20px
+      );
+    border-radius: 4px;
+  }
+
+  #rhythm-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 14px 0 0;
+    padding: 11px 15px;
+    border-radius: 10px;
+    border-left: 3px solid var(--glow, var(--violet));
+    background: rgba(255, 255, 255, 0.5);
+    transition: border-color 0.3s ease;
+  }
+
+  .clinical-card {
+    margin-top: 10px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--violet-border);
+  }
+  .clinical-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 520px) {
+    .clinical-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .clinical-col b {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--violet-strong);
+    margin-bottom: 4px;
+  }
+  .clinical-col p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+  .drug-row {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--violet-border);
+  }
+  .drug-row b {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--violet-strong);
+    margin-bottom: 6px;
+  }
+  .drug-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .drug-tag {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--violet-wash);
+    border: 1px solid var(--violet-border);
+    color: var(--violet-strong);
+  }
+  .drug-tag.none {
+    color: var(--text-secondary);
+    font-style: italic;
+    background: transparent;
+    border-style: dashed;
+  }
+  .clinical-note {
+    margin: 10px 2px 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.75;
+    font-style: italic;
+  }
+</style>
+
+<div class="rhythm-widget">
+  <div class="rhythm-groups">
+    <div class="rhythm-group">
+      <span class="group-label">Sinus</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-success active" data-r="nsr">
+          Normal sinus
+        </button>
+        <button class="rhythm-btn severity-warning" data-r="brady">
+          Bradycardia
+        </button>
+        <button class="rhythm-btn severity-warning" data-r="tachy">
+          Tachycardia
+        </button>
+        <button class="rhythm-btn severity-success" data-r="sinusArr">
+          Sinus arrhythmia
+        </button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Ectopic beats</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-warning" data-r="pac">PAC</button>
+        <button class="rhythm-btn severity-warning" data-r="pvc">PVC</button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Atrial</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-warning" data-r="afib">
+          Atrial fibrillation
+        </button>
+        <button class="rhythm-btn severity-warning" data-r="aflutter">
+          Atrial flutter
+        </button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Junctional</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-warning" data-r="junctional">
+          Junctional
+        </button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">AV blocks</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-warning" data-r="avb1">
+          1st degree
+        </button>
+        <button class="rhythm-btn severity-warning" data-r="wenckebach">
+          2nd degree (Wenckebach)
+        </button>
+        <button class="rhythm-btn severity-danger" data-r="mobitz2">
+          2nd degree (Mobitz II)
+        </button>
+        <button class="rhythm-btn severity-danger" data-r="avb3">
+          3rd degree (complete)
+        </button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Supraventric.</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-warning" data-r="svt">SVT</button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Ventricular</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-danger" data-r="vt">V-tach</button>
+        <button class="rhythm-btn severity-danger" data-r="torsades">
+          Torsades
+        </button>
+        <button class="rhythm-btn severity-danger" data-r="vfib">V-fib</button>
+      </div>
+    </div>
+    <div class="rhythm-group">
+      <span class="group-label">Arrest</span>
+      <div class="group-buttons">
+        <button class="rhythm-btn severity-danger" data-r="asystole">
+          Asystole
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="heart-frame" id="heart-frame">
+      <svg width="76" height="70" viewBox="0 0 200 180">
+        <g
+          id="heart-g"
+          style="transform-origin: 100px 90px; transform-box: fill-box"
+        >
+          <path
+            id="heart-shape"
+            d="M100,180 C40,120 0,80 0,45 C0,15 25,0 50,0 C70,0 90,10 100,35 C110,10 130,0 150,0 C175,0 200,15 200,45 C200,80 160,120 100,180 Z"
+            fill="#B33A3A"
+            stroke="#7A2424"
+            stroke-width="2"
+          />
+        </g>
+      </svg>
+    </div>
+    <div class="info-main">
+      <div id="rate-label">72 bpm</div>
+      <div id="rhythm-name">Normal sinus rhythm</div>
+      <span id="status-badge" class="badge">Normal rhythm</span>
+      <div class="stat-row">
+        <div class="stat-chip">
+          <b>Regularity</b><span id="stat-regularity">Regular</span>
+        </div>
+        <div class="stat-chip">
+          <b>P waves</b><span id="stat-pwave">Present, normal</span>
+        </div>
+        <div class="stat-chip"><b>QRS</b><span id="stat-qrs">Narrow</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="monitor-card">
+    <div class="monitor-topline">
+      <span class="monitor-lead">LEAD II</span>
+      <span class="monitor-hr" id="monitor-hr">72</span>
+    </div>
+    <canvas id="ecg-canvas" width="640" height="130"></canvas>
+  </div>
+
+  <p id="rhythm-desc">
+    Regular electrical impulses from the SA node produce a coordinated, steady
+    heartbeat.
+  </p>
+
+  <div class="clinical-card">
+    <div class="clinical-grid">
+      <div class="clinical-col">
+        <b>When it happens</b>
+        <p id="detail-causes">A normal finding in healthy people at rest.</p>
+      </div>
+      <div class="clinical-col">
+        <b>Treatment</b>
+        <p id="detail-treatment">None needed — this is the target rhythm.</p>
+      </div>
+    </div>
+    <div class="drug-row">
+      <b>Common drugs</b>
+      <div class="drug-tags" id="detail-drugs"></div>
+    </div>
+  </div>
+  <p class="clinical-note">
+    Educational overview only — not medical advice. Real management always
+    depends on the full clinical picture and current guidelines.
+  </p>
+</div>
+
+<script>
+  (function () {
+    var profiles = {
+      nsr: {
+        label: "Normal sinus rhythm",
+        rate: "72 bpm",
+        hr: "72",
+        mode: "conducted",
+        atrialMean: 830,
+        atrialJitter: 0.02,
+        prBase: 160,
+        status: "Normal rhythm",
+        severity: "success",
+        regularity: "Regular",
+        pwave: "Present, normal",
+        qrs: "Narrow",
+        desc: "Regular electrical impulses from the SA node produce a coordinated, steady heartbeat.",
+        causes:
+          "The normal, expected rhythm in a healthy person at rest — no arrhythmia present.",
+        treatment:
+          "None needed. This is the target rhythm for every other rhythm on this list.",
+        drugs: [],
+      },
+      brady: {
+        label: "Sinus bradycardia",
+        rate: "42 bpm",
+        hr: "42",
+        mode: "conducted",
+        atrialMean: 1430,
+        atrialJitter: 0.02,
+        prBase: 170,
+        status: "Slow, regular",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Present, normal",
+        qrs: "Narrow",
+        desc: "Slowed impulse formation or conduction produces a regular rhythm that is too slow to meet demand.",
+        causes:
+          "Athletic conditioning, sleep, high vagal tone, hypothyroidism, sick sinus syndrome, inferior MI, or AV-nodal blocking drugs.",
+        treatment:
+          "None if asymptomatic. If symptomatic or unstable: atropine or transcutaneous pacing, treat the underlying cause, and consider a permanent pacemaker for recurrent symptoms.",
+        drugs: ["Atropine", "Dopamine/epinephrine infusion (refractory)"],
+      },
+      tachy: {
+        label: "Sinus tachycardia",
+        rate: "130 bpm",
+        hr: "130",
+        mode: "conducted",
+        atrialMean: 460,
+        atrialJitter: 0.02,
+        prBase: 140,
+        status: "Fast, regular",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Present, normal",
+        qrs: "Narrow",
+        desc: "The SA node fires faster than normal, often from exertion, fever, pain, or stress, but conduction itself stays normal and regular.",
+        causes:
+          "Exercise, pain, fever, anxiety, hypovolemia, anemia, hyperthyroidism, sepsis, or stimulants like caffeine and cocaine.",
+        treatment:
+          "Treat the underlying cause (fluids, antipyretics, analgesia) rather than the rhythm itself. Rate-lowering drugs are used only if the cause itself calls for them.",
+        drugs: ["Beta-blockers (selected causes, e.g. hyperthyroidism)"],
+      },
+      sinusArr: {
+        label: "Sinus arrhythmia",
+        rate: "60–100 bpm (variable)",
+        hr: "≈ 78",
+        mode: "conducted",
+        atrialMean: 830,
+        atrialJitter: 0.05,
+        phasic: true,
+        prBase: 160,
+        status: "Normal variant",
+        severity: "success",
+        regularity: "Phasic (with breathing)",
+        pwave: "Present, normal",
+        qrs: "Narrow",
+        desc: "Sinus rate rises and falls in step with breathing, a benign variant most common in children and young adults.",
+        causes:
+          "Normal respiratory variation in vagal tone — common and benign, especially in children, teens, and athletes.",
+        treatment: "None. It is a normal variant and requires no intervention.",
+        drugs: [],
+      },
+      pac: {
+        label: "Premature atrial contraction",
+        rate: "≈72 bpm (irregular)",
+        hr: "72",
+        mode: "conducted",
+        atrialMean: 830,
+        atrialJitter: 0.02,
+        prBase: 150,
+        ectopic: "PAC",
+        ectopicEvery: 5,
+        status: "Early ectopic beat",
+        severity: "warning",
+        regularity: "Irregular (early beats)",
+        pwave: "Present, premature P differs",
+        qrs: "Narrow",
+        desc: "An ectopic atrial focus fires early, before the next sinus impulse is due, producing a differently shaped P wave followed by a brief, usually non-compensatory pause.",
+        causes:
+          "Caffeine, alcohol, stress, stimulants, electrolyte imbalance, hyperthyroidism, or underlying structural heart disease.",
+        treatment:
+          "Usually none needed. Reduce triggers (caffeine, stimulants); beta-blockers only if frequent or symptomatic.",
+        drugs: ["Beta-blockers (if frequent/symptomatic)"],
+      },
+      pvc: {
+        label: "Premature ventricular contraction",
+        rate: "≈72 bpm (irregular)",
+        hr: "72",
+        mode: "conducted",
+        atrialMean: 830,
+        atrialJitter: 0.02,
+        prBase: 160,
+        ectopic: "PVC",
+        ectopicEvery: 6,
+        status: "Early ectopic beat",
+        severity: "warning",
+        regularity: "Irregular (early wide beats)",
+        pwave: "Normal; absent before PVC",
+        qrs: "Narrow; wide during PVC",
+        desc: "An irritable ventricular focus fires early and bypasses the normal conduction pathway, producing a wide, bizarre QRS with no preceding P wave, followed by a compensatory pause.",
+        causes:
+          "Caffeine, stress, low potassium or magnesium, myocardial ischemia, structural heart disease, or stimulant use.",
+        treatment:
+          "Usually benign if infrequent with no structural heart disease — correct electrolytes and address ischemia. Beta-blockers if symptomatic or frequent; catheter ablation for refractory, high-burden cases.",
+        drugs: [
+          "Beta-blockers",
+          "Potassium/magnesium repletion",
+          "Amiodarone (select cases)",
+        ],
+      },
+      afib: {
+        label: "Atrial fibrillation",
+        rate: "Irregularly irregular",
+        hr: "≈ 92",
+        mode: "fib",
+        mean: 680,
+        jitter: 0.55,
+        status: "Irregular",
+        severity: "warning",
+        regularity: "Irregularly irregular",
+        pwave: "Absent (fibrillatory)",
+        qrs: "Narrow",
+        desc: "Chaotic atrial activity conducts erratically through the AV node, so no two beats are evenly spaced.",
+        causes:
+          'Hypertension, valvular disease, hyperthyroidism, heart failure, alcohol ("holiday heart"), sleep apnea, or aging.',
+        treatment:
+          "Rate control, rhythm control (cardioversion or ablation), and stroke-risk-based anticoagulation.",
+        drugs: [
+          "Beta-blockers / diltiazem-verapamil (rate control)",
+          "Amiodarone / flecainide / sotalol (rhythm control)",
+          "Apixaban / rivaroxaban / warfarin (anticoagulation)",
+        ],
+      },
+      aflutter: {
+        label: "Atrial flutter",
+        rate: "~150 bpm",
+        hr: "150",
+        mode: "flutter",
+        mean: 400,
+        jitter: 0.03,
+        status: "Rapid, regular",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Absent (flutter / sawtooth)",
+        qrs: "Narrow",
+        desc: "A single rapid atrial circuit conducts to the ventricles in an organized, regular pattern (often 2:1).",
+        causes:
+          "Structural heart disease, COPD, post-cardiac-surgery state, or hyperthyroidism.",
+        treatment:
+          "Rate control, anticoagulation, and cardioversion; catheter ablation of the cavotricuspid isthmus is often curative.",
+        drugs: [
+          "Beta-blockers / diltiazem-verapamil (rate control)",
+          "Ibutilide (chemical cardioversion)",
+          "Anticoagulants",
+        ],
+      },
+      junctional: {
+        label: "Junctional rhythm",
+        rate: "50 bpm",
+        hr: "50",
+        mode: "junctional",
+        mean: 1200,
+        jitter: 0.02,
+        wide: false,
+        hasT: true,
+        status: "Escape rhythm",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Absent or retrograde",
+        qrs: "Narrow",
+        desc: "When the SA node fails or slows too much, the AV junction steps in as a backup pacemaker, producing a regular but slow rhythm without normal P waves.",
+        causes:
+          "Sick sinus syndrome, digoxin toxicity, inferior MI, post-cardiac-surgery state, or high vagal tone.",
+        treatment:
+          "Treat the underlying cause; atropine if symptomatic; permanent pacemaker if persistent and symptomatic.",
+        drugs: ["Atropine", "Stop digoxin if toxicity is the cause"],
+      },
+      avb1: {
+        label: "First-degree AV block",
+        rate: "72 bpm",
+        hr: "72",
+        mode: "conducted",
+        atrialMean: 830,
+        atrialJitter: 0.02,
+        prBase: 320,
+        status: "Prolonged conduction",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Present, prolonged PR",
+        qrs: "Narrow",
+        desc: "Every impulse still reaches the ventricles, but conduction through the AV node is delayed, prolonging the PR interval.",
+        causes:
+          "High vagal tone, normal aging, AV-nodal blocking drugs (beta-blockers, calcium-channel blockers, digoxin), or inferior MI.",
+        treatment:
+          "Usually none — monitor and review any causative medications.",
+        drugs: [
+          "Usually none; adjust beta-blocker/CCB/digoxin dosing if implicated",
+        ],
+      },
+      wenckebach: {
+        label: "2nd-degree AV block, Mobitz I (Wenckebach)",
+        rate: "Variable (grouped beats)",
+        hr: "≈ 60",
+        mode: "conducted",
+        atrialMean: 700,
+        atrialJitter: 0.015,
+        avBehavior: "wenckebach",
+        status: "Progressive block",
+        severity: "warning",
+        regularity: "Irregular (grouped beating)",
+        pwave: "Present, progressively longer PR",
+        qrs: "Narrow",
+        desc: "The AV node tires with each successive beat, progressively delaying conduction until one impulse is dropped entirely, then the cycle resets.",
+        causes:
+          "High vagal tone, inferior MI, or AV-nodal blocking drugs — usually a benign, nodal-level block.",
+        treatment:
+          "Usually benign and asymptomatic — monitor. Atropine if symptomatic; a pacemaker is rarely needed.",
+        drugs: ["Atropine (if symptomatic)", "Hold AV-nodal blocking drugs"],
+      },
+      mobitz2: {
+        label: "2nd-degree AV block, Mobitz II",
+        rate: "Variable (dropped beats)",
+        hr: "≈ 75",
+        mode: "conducted",
+        atrialMean: 600,
+        atrialJitter: 0.01,
+        prBase: 160,
+        avBehavior: "mobitz2",
+        blockRatio: 4,
+        status: "High-grade block",
+        severity: "danger",
+        regularity: "Irregular (fixed-ratio drops)",
+        pwave: "Present, constant PR",
+        qrs: "Narrow or wide",
+        desc: "Conduction fails suddenly and unpredictably below the AV node, without the warning of a lengthening PR interval — a pattern more likely to progress to complete block.",
+        causes:
+          "Structural disease of the conduction system below the AV node — anterior MI, infranodal fibrosis, or degenerative disease.",
+        treatment:
+          "High risk of sudden progression to complete heart block — a permanent pacemaker is usually indicated even if currently asymptomatic. Atropine is unreliable since the block is infranodal.",
+        drugs: [
+          "Atropine (often ineffective)",
+          "Temporary pacing as a bridge to a permanent pacemaker",
+        ],
+      },
+      avb3: {
+        label: "Third-degree (complete) AV block",
+        rate: "40 bpm (escape)",
+        hr: "40",
+        mode: "dissociated",
+        atrialMean: 800,
+        atrialJitter: 0.02,
+        ventMean: 1500,
+        ventJitter: 0.03,
+        status: "Complete block",
+        severity: "danger",
+        regularity: "Regular (dissociated)",
+        pwave: "Present, independent of QRS",
+        qrs: "Wide (ventricular escape)",
+        desc: "No atrial impulses reach the ventricles at all. The atria and ventricles beat independently, each driven by its own pacemaker.",
+        causes:
+          "Severe conduction system disease, anterior or inferior MI, degenerative fibrosis (Lenègre/Lev disease), drug toxicity, or congenital block.",
+        treatment:
+          "Emergency transcutaneous or transvenous pacing if unstable; a permanent pacemaker is the definitive treatment.",
+        drugs: [
+          "Atropine (often ineffective)",
+          "Dopamine/epinephrine infusion as a bridge to pacing",
+        ],
+      },
+      svt: {
+        label: "Supraventricular tachycardia",
+        rate: "185 bpm",
+        hr: "185",
+        mode: "junctional",
+        mean: 325,
+        jitter: 0.02,
+        wide: false,
+        hasT: true,
+        status: "Rapid, regular",
+        severity: "warning",
+        regularity: "Regular",
+        pwave: "Absent or buried",
+        qrs: "Narrow",
+        desc: "A fast re-entrant loop above the ventricles produces a narrow, regular rhythm with abrupt onset.",
+        causes:
+          "A re-entrant circuit through the AV node or an accessory pathway (e.g. WPW); triggered by caffeine, stimulants, or stress.",
+        treatment:
+          "Vagal maneuvers first, then IV adenosine; synchronized cardioversion if unstable; catheter ablation for a definitive cure.",
+        drugs: [
+          "Adenosine",
+          "Beta-blockers / calcium-channel blockers (prevention)",
+        ],
+      },
+      vt: {
+        label: "Ventricular tachycardia",
+        rate: "170 bpm",
+        hr: "170",
+        mode: "junctional",
+        mean: 350,
+        jitter: 0.02,
+        wide: true,
+        hasT: false,
+        status: "Life-threatening",
+        severity: "danger",
+        regularity: "Regular",
+        pwave: "Absent",
+        qrs: "Wide",
+        desc: "Rapid depolarization from the ventricles bypasses normal pathways, producing wide, fast complexes.",
+        causes:
+          "Structural heart disease and prior MI scar, cardiomyopathy, electrolyte imbalance, or drug toxicity.",
+        treatment:
+          "Immediate defibrillation and CPR if pulseless; synchronized cardioversion or antiarrhythmics if stable; an ICD for recurrence risk.",
+        drugs: ["Amiodarone", "Lidocaine", "Procainamide"],
+      },
+      torsades: {
+        label: "Torsades de pointes",
+        rate: "~260 bpm",
+        hr: "260",
+        mode: "torsades",
+        mean: 230,
+        jitter: 0.05,
+        status: "Life-threatening",
+        severity: "danger",
+        regularity: "Irregular, polymorphic",
+        pwave: "Absent",
+        qrs: "Wide, twisting amplitude",
+        desc: "A polymorphic ventricular tachycardia whose QRS axis and amplitude twist around the baseline, often triggered by a prolonged QT interval.",
+        causes:
+          "A prolonged QT interval — congenital long QT syndrome, or acquired from QT-prolonging drugs, hypokalemia, or hypomagnesemia.",
+        treatment:
+          "IV magnesium sulfate first-line, correct potassium, stop any QT-prolonging drugs, and defibrillate if it degenerates into VF.",
+        drugs: ["Magnesium sulfate", "Potassium repletion"],
+      },
+      vfib: {
+        label: "Ventricular fibrillation",
+        rate: "No output",
+        hr: "—",
+        mode: "chaotic",
+        status: "Cardiac arrest",
+        severity: "danger",
+        regularity: "Chaotic",
+        pwave: "Absent",
+        qrs: "Absent (chaotic)",
+        desc: "Chaotic, disorganized activity gives no coordinated contraction and no effective pulse. A medical emergency.",
+        causes:
+          "Acute MI/ischemia, severe electrolyte imbalance, cardiomyopathy, electrocution, or hypoxia.",
+        treatment:
+          "Immediate CPR and defibrillation per ACLS; epinephrine and antiarrhythmics between shocks.",
+        drugs: ["Epinephrine", "Amiodarone", "Lidocaine"],
+      },
+      asystole: {
+        label: "Asystole",
+        rate: "0 bpm",
+        hr: "0",
+        mode: "flatline",
+        status: "Cardiac arrest",
+        severity: "danger",
+        regularity: "None",
+        pwave: "None",
+        qrs: "None (flatline)",
+        desc: "No organized electrical activity remains in the heart — no contraction and no pulse. The ultimate medical emergency.",
+        causes:
+          'The end stage of untreated arrest, severe hypoxia, or a massive MI — often from one of the reversible "Hs and Ts".',
+        treatment:
+          "CPR and epinephrine per ACLS. Not a shockable rhythm — defibrillation is not used. Identify and treat reversible causes.",
+        drugs: ["Epinephrine"],
+      },
+    };
+
+    var current = "nsr";
+    var canvas = document.getElementById("ecg-canvas");
+    var ctx = canvas.getContext("2d");
+    var W = canvas.width,
+      H = canvas.height;
+    var sweepBuf = new Float32Array(W);
+    var writeX = 0;
+    var pEvents = [];
+    var qrsEvents = [];
+    var engineState = {};
+    var startTime = null;
+    var rafId = null;
+
+    function chaosValue(t) {
+      return (
+        0.5 * Math.sin(t * 0.011) +
+        0.3 * Math.sin(t * 0.0173 + 1.3) +
+        0.25 * Math.sin(t * 0.029 + 0.7) +
+        0.15 * Math.sin(t * 0.051 + 2.1)
+      );
+    }
+
+    function tickConducted(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextAtrial && guard++ < 8) {
+        var atrialTime = s.nextAtrial;
+        s.cycleIndex++;
+        var firePVC = s.pendingPVC,
+          firePAC = s.pendingPAC;
+        s.pendingPVC = false;
+        s.pendingPAC = false;
+
+        var meanInterval = p.atrialMean;
+        if (p.phasic) meanInterval *= 1 + 0.18 * Math.sin(t / 650);
+        var jitter = (Math.random() * 2 - 1) * p.atrialJitter * meanInterval;
+
+        if (firePVC) {
+          qrsEvents.push({
+            time: atrialTime,
+            wide: true,
+            hasT: true,
+            amp: 1.25,
+          });
+          s.nextAtrial = atrialTime + meanInterval * 1.3 + jitter * 0.3;
+        } else {
+          pEvents.push({ time: atrialTime });
+          if (firePAC) {
+            qrsEvents.push({
+              time: atrialTime + 130,
+              wide: false,
+              hasT: true,
+              amp: 0.95,
+            });
+            s.nextAtrial = atrialTime + meanInterval * 0.9 + jitter * 0.3;
+          } else {
+            var pr = p.prBase,
+              conducts = true;
+            if (p.avBehavior === "wenckebach") {
+              pr = s.wenckebachPR;
+              conducts = s.wenckebachPR <= 380;
+              s.wenckebachPR = conducts ? s.wenckebachPR + 45 : 160;
+            } else if (p.avBehavior === "mobitz2") {
+              conducts = s.cycleIndex % p.blockRatio !== 0;
+            }
+            if (conducts) {
+              qrsEvents.push({
+                time: atrialTime + pr,
+                wide: !!p.wide,
+                hasT: true,
+                amp: 1,
+              });
+            }
+            s.nextAtrial = atrialTime + meanInterval + jitter;
+          }
+        }
+
+        if (p.ectopic === "PAC" && s.cycleIndex % p.ectopicEvery === 0)
+          s.pendingPAC = true;
+        if (p.ectopic === "PVC" && s.cycleIndex % p.ectopicEvery === 0)
+          s.pendingPVC = true;
+      }
+    }
+
+    function tickJunctional(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextVent && guard++ < 8) {
+        var vt = s.nextVent;
+        qrsEvents.push({
+          time: vt,
+          wide: !!p.wide,
+          hasT: p.hasT !== false,
+          amp: 1,
+        });
+        var jitter = (Math.random() * 2 - 1) * p.jitter * p.mean;
+        s.nextVent = vt + p.mean + jitter;
+      }
+    }
+
+    function tickDissociated(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextAtrial && guard++ < 8) {
+        pEvents.push({ time: s.nextAtrial });
+        var j = (Math.random() * 2 - 1) * p.atrialJitter * p.atrialMean;
+        s.nextAtrial += p.atrialMean + j;
+      }
+      guard = 0;
+      while (t >= s.nextVent && guard++ < 8) {
+        qrsEvents.push({ time: s.nextVent, wide: true, hasT: true, amp: 1.1 });
+        var j2 = (Math.random() * 2 - 1) * p.ventJitter * p.ventMean;
+        s.nextVent += p.ventMean + j2;
+      }
+    }
+
+    function tickFlutterVent(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextVent && guard++ < 8) {
+        qrsEvents.push({ time: s.nextVent, wide: false, hasT: false, amp: 1 });
+        var j = (Math.random() * 2 - 1) * p.jitter * p.mean;
+        s.nextVent += p.mean + j;
+      }
+    }
+
+    function tickFib(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextVent && guard++ < 8) {
+        qrsEvents.push({ time: s.nextVent, wide: false, hasT: false, amp: 1 });
+        var j = (Math.random() * 2 - 1) * p.jitter * p.mean;
+        var interval = p.mean + j;
+        if (interval < 150) interval = 150;
+        s.nextVent += interval;
+      }
+    }
+
+    function tickTorsades(p, s, t) {
+      var guard = 0;
+      while (t >= s.nextVent && guard++ < 8) {
+        s.beatCounter = (s.beatCounter || 0) + 1;
+        var amp = 1.15 * Math.sin(s.beatCounter * 0.55);
+        qrsEvents.push({ time: s.nextVent, wide: true, hasT: false, amp: amp });
+        var j = (Math.random() * 2 - 1) * p.jitter * p.mean;
+        s.nextVent += p.mean + j;
+      }
+    }
+
+    function prune(t) {
+      while (pEvents.length && t - pEvents[0].time > 900) pEvents.shift();
+      while (qrsEvents.length && t - qrsEvents[0].time > 900) qrsEvents.shift();
+    }
+
+    function valueAt(t) {
+      var v = 0,
+        i,
+        e,
+        dt,
+        sigma;
+      for (i = 0; i < pEvents.length; i++) {
+        dt = t - pEvents[i].time;
+        if (dt < -400 || dt > 400) continue;
+        sigma = 26;
+        v += 0.2 * Math.exp(-(dt * dt) / (2 * sigma * sigma));
+      }
+      for (i = 0; i < qrsEvents.length; i++) {
+        e = qrsEvents[i];
+        dt = t - e.time;
+        if (dt < -500 || dt > 500) continue;
+        sigma = e.wide ? 60 : 32;
+        v +=
+          (e.amp != null ? e.amp : 1) *
+          Math.exp(-(dt * dt) / (2 * sigma * sigma));
+        if (e.hasT) {
+          var tOff = e.wide ? 300 : 230;
+          var td = dt - tOff;
+          var tsig = e.wide ? 85 : 65;
+          v += 0.26 * Math.exp(-(td * td) / (2 * tsig * tsig));
+        }
+      }
+      return v;
+    }
+
+    function heartScale(t) {
+      var s = 1;
+      for (var i = qrsEvents.length - 1; i >= 0; i--) {
+        var e = qrsEvents[i];
+        var dt = t - e.time;
+        if (dt < -60) continue;
+        if (dt > 260) break;
+        var strength =
+          Math.exp(-(dt * dt) / (2 * 45 * 45)) *
+          (e.amp != null ? Math.abs(e.amp) : 1);
+        var cand = 1 + 0.18 * Math.min(strength, 1.3);
+        if (cand > s) s = cand;
+      }
+      return s;
+    }
+
+    function setActiveButton(name) {
+      document.querySelectorAll(".rhythm-btn").forEach(function (b) {
+        b.classList.toggle("active", b.getAttribute("data-r") === name);
+      });
+    }
+
+    function severityColor(sev) {
+      if (sev === "danger") return "var(--text-danger)";
+      if (sev === "warning") return "var(--text-warning)";
+      return "var(--text-success)";
+    }
+
+    function resetRhythm(name) {
+      current = name;
+      var p = profiles[name];
+      sweepBuf = new Float32Array(W);
+      writeX = 0;
+      pEvents = [];
+      qrsEvents = [];
+      engineState = {
+        nextAtrial: 40,
+        nextVent: 40,
+        cycleIndex: 0,
+        wenckebachPR: 160,
+        pendingPAC: false,
+        pendingPVC: false,
+        beatCounter: 0,
+      };
+      startTime = null;
+
+      document.getElementById("rate-label").textContent = p.rate;
+      document.getElementById("rhythm-name").textContent = p.label;
+      document.getElementById("rhythm-desc").textContent = p.desc;
+      document.getElementById("monitor-hr").textContent = p.hr;
+      document.getElementById("stat-regularity").textContent = p.regularity;
+      document.getElementById("stat-pwave").textContent = p.pwave;
+      document.getElementById("stat-qrs").textContent = p.qrs;
+      document.getElementById("detail-causes").textContent = p.causes;
+      document.getElementById("detail-treatment").textContent = p.treatment;
+
+      var drugWrap = document.getElementById("detail-drugs");
+      drugWrap.innerHTML = "";
+      if (p.drugs && p.drugs.length) {
+        p.drugs.forEach(function (d) {
+          var tag = document.createElement("span");
+          tag.className = "drug-tag";
+          tag.textContent = d;
+          drugWrap.appendChild(tag);
+        });
+      } else {
+        var tag2 = document.createElement("span");
+        tag2.className = "drug-tag none";
+        tag2.textContent = "No specific drug therapy";
+        drugWrap.appendChild(tag2);
+      }
+
+      var badge = document.getElementById("status-badge");
+      badge.textContent = p.status;
+      var bg = "var(--bg-" + p.severity + ")";
+      var fg = "var(--text-" + p.severity + ")";
+      badge.style.background = bg;
+      badge.style.color = fg;
+
+      document
+        .getElementById("heart-frame")
+        .style.setProperty("--glow", severityColor(p.severity));
+      document
+        .getElementById("rhythm-desc")
+        .style.setProperty("--glow", severityColor(p.severity));
+
+      setActiveButton(name);
+    }
+
+    document.querySelectorAll(".rhythm-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        resetRhythm(btn.getAttribute("data-r"));
+      });
+    });
+
+    function stepSweep(value) {
+      sweepBuf[writeX] = value;
+      var gap = 14;
+      for (var i = 1; i <= gap; i++) {
+        sweepBuf[(writeX + i) % W] = 0;
+      }
+      writeX = (writeX + 1) % W;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var mid = H * 0.58,
+        scaleY = 34;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.strokeStyle = "#e0aaff";
+      ctx.lineWidth = 2;
+      ctx.shadowColor = "#c084fc";
+      ctx.shadowBlur = 9;
+      for (var x = 0; x < W; x++) {
+        var y = mid - sweepBuf[x] * scaleY;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(233,213,255,0.6)";
+      ctx.lineWidth = 1;
+      ctx.moveTo(writeX, 0);
+      ctx.lineTo(writeX, H);
+      ctx.stroke();
+    }
+
+    function frame(ts) {
+      if (startTime === null) startTime = ts;
+      var t = ts - startTime;
+      var p = profiles[current];
+      var value, scale;
+
+      switch (p.mode) {
+        case "conducted":
+          tickConducted(p, engineState, t);
+          break;
+        case "junctional":
+          tickJunctional(p, engineState, t);
+          break;
+        case "dissociated":
+          tickDissociated(p, engineState, t);
+          break;
+        case "flutter":
+          tickFlutterVent(p, engineState, t);
+          break;
+        case "fib":
+          tickFib(p, engineState, t);
+          break;
+        case "torsades":
+          tickTorsades(p, engineState, t);
+          break;
+      }
+      prune(t);
+
+      if (p.mode === "chaotic") {
+        value = chaosValue(t) * 0.9;
+        scale = 1 + 0.05 * chaosValue(t * 1.3);
+      } else if (p.mode === "flatline") {
+        value = (Math.random() - 0.5) * 0.02;
+        scale = 1;
+      } else {
+        value = valueAt(t);
+        if (p.mode === "flutter") value += 0.15 * ((t % 200) / 200 - 0.5);
+        if (p.mode === "fib") value += chaosValue(t) * 0.05;
+        scale = heartScale(t);
+      }
+
+      stepSweep(value);
+      draw();
+
+      var heartG = document.getElementById("heart-g");
+      heartG.style.transform = "scale(" + scale.toFixed(3) + ")";
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    resetRhythm("nsr");
+    rafId = requestAnimationFrame(frame);
+  })();
+</script>
